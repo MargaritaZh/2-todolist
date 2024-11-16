@@ -3,6 +3,8 @@ import { authReducer, authSlice } from "../features/auth/model/authSlice"
 import { tasksReducer, tasksSlice } from "../features/todolists/model/tasksSlice"
 import { todolistsReducer, todolistsSlice } from "../features/todolists/model/todolistsSlice"
 import { appReducer, appSlice } from "./appSlice"
+import { todolistsApi } from "../features/todolists/api/todolistsApi"
+import { setupListeners } from "@reduxjs/toolkit/query"
 
 export const store = configureStore({
   reducer: {
@@ -10,8 +12,20 @@ export const store = configureStore({
     [todolistsSlice.name]: todolistsReducer,
     [appSlice.name]: appReducer,
     [authSlice.name]: authReducer,
+
+    //RTK query
+    [todolistsApi.reducerPath]: todolistsApi.reducer,
   },
+  ////RTK query-> подключаем middleware
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(todolistsApi.middleware),
+
 })
+
+//RTK query
+setupListeners(store.dispatch)
+
+
 
 export type RootState = ReturnType<typeof store.getState>
 
