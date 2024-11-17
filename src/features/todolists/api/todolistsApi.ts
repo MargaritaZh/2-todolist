@@ -6,6 +6,7 @@ import { Todolist } from "./todolistsApi.types"
 
 // 1
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { DomainTodolist } from "../model/todolistsSlice"
 
 // 2
 export const todolistsApi = createApi({
@@ -20,23 +21,26 @@ export const todolistsApi = createApi({
     },
   }),
   // 5
-  endpoints: build => {
-    return {
+  endpoints: build => ({
       // 6
-      getTodolists: build.query<any[], void>({
+       // типизация query: то что возвращает///что будет принимать
+      getTodolists: build.query<DomainTodolist[], void>({
         query: () => {
           return {
             url: 'todo-lists',
             method: 'GET',
           }
         },
+        //редактируем ответ,добавляем то что не приходит с сервера
+        transformResponse(todolists: Todolist[]): DomainTodolist[] {
+          return todolists.map(tl => ({ ...tl, filter: 'all', entityStatus: 'idle' }))
+        },
       }),
-    }
-  },
+    }),
 })
 
 // 7
-export const { useGetTodolistsQuery } = todolistsApi
+export const { useGetTodolistsQuery,useLazyGetTodolistsQuery } = todolistsApi
 
 
 
