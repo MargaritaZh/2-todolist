@@ -12,9 +12,7 @@ type Props = {
 
 export const TodolistTitle = ({ todolist }: Props) => {
 
-
   const { title, id, entityStatus } = todolist
-
 
   // const dispatch = useAppDispatch()
 
