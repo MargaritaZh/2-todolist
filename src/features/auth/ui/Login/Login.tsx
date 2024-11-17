@@ -10,9 +10,11 @@ import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { Navigate } from "react-router-dom"
-import { selectThemeMode } from "../../../../app/appSlice"
-import { loginTC, selectIsLoggedIn } from "../../model/authSlice"
+import { loginTC, selectIsLoggedIn, selectThemeMode, setIsLoggedIn } from "../../../../app/appSlice"
+
 import s from "./Login.module.css"
+import { useLoginMutation } from "../../api/authAPI"
+import { ResultCode } from "common/enums"
 
 type Inputs = {
   email: string
@@ -27,17 +29,33 @@ export const Login = () => {
 
   const dispatch = useAppDispatch()
 
+  const [login] = useLoginMutation()
+
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors }
   } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    dispatch(loginTC(data))
-    reset()
+
+    // dispatch(loginTC(data))
+    // reset()
+
+
+    //ЗАМЕНИМ НА ВЫЗОВ МЕТОДА, взятого из хука
+    login(data)
+      .then((res) => {
+        if (res.data?.resultCode === ResultCode.Success) {
+          dispatch(setIsLoggedIn({ isLoggedIn: true }))
+          localStorage.setItem("sn-token", res.data.data.token)
+        }
+        reset()
+      })
+
+
   }
 
   if (isLoggedIn) {
@@ -77,8 +95,8 @@ export const Login = () => {
                   required: "Email is required",
                   pattern: {
                     value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Incorrect email address",
-                  },
+                    message: "Incorrect email address"
+                  }
                 })}
               />
               {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
@@ -90,8 +108,8 @@ export const Login = () => {
                   required: "Password is required",
                   minLength: {
                     value: 3,
-                    message: "Password must be at least 3 characters long",
-                  },
+                    message: "Password must be at least 3 characters long"
+                  }
                 })}
               />
               {errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
