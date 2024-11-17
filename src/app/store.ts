@@ -5,6 +5,7 @@ import { todolistsReducer, todolistsSlice } from "../features/todolists/model/to
 import { appReducer, appSlice } from "./appSlice"
 import { todolistsApi } from "../features/todolists/api/todolistsApi"
 import { setupListeners } from "@reduxjs/toolkit/query"
+import { baseApi } from "./baseApi"
 
 export const store = configureStore({
   reducer: {
@@ -14,11 +15,14 @@ export const store = configureStore({
     [authSlice.name]: authReducer,
 
     //RTK query
-    [todolistsApi.reducerPath]: todolistsApi.reducer,
+    // [todolistsApi.reducerPath]: todolistsApi.reducer,
+    //перенести в baseApi
+    [baseApi.reducerPath]: baseApi.reducer,
   },
   ////RTK query-> подключаем middleware
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(todolistsApi.middleware),
+    // getDefaultMiddleware().concat(todolistsApi.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware),
 
 })
 

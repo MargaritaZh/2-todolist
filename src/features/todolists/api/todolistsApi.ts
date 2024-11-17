@@ -1,25 +1,27 @@
 import { instance } from "common/instance"
 import { BaseResponse } from "common/types"
 import { Todolist } from "./todolistsApi.types"
-
-
-
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { DomainTodolist } from "../model/todolistsSlice"
 
+//обязательно в импорте в конце библиотека react
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { baseApi } from "../../../app/baseApi"
 
-export const todolistsApi = createApi({
-  reducerPath: "todolistsApi",
+
+
+export const todolistsApi = baseApi.injectEndpoints({
+  //перенести в baseApi этот код
+  // reducerPath: "todolistsApi",
   //регистрируем тэги
-  tagTypes:["Todolist"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_BASE_URL,
-    prepareHeaders: headers => {
-      headers.set("API-KEY", `${process.env.REACT_APP_API_KEY}`)
-      headers.set("Authorization", `Bearer ${localStorage.getItem("sn-token")}`)
-    }
-  }),
-  endpoints: build => ({
+  // tagTypes:["Todolist"],
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl: process.env.REACT_APP_BASE_URL,
+  //   prepareHeaders: headers => {
+  //     headers.set("API-KEY", `${process.env.REACT_APP_API_KEY}`)
+  //     headers.set("Authorization", `Bearer ${localStorage.getItem("sn-token")}`)
+  //   }
+  // }),
+  endpoints: (build) => ({
     // типизация query: то что возвращает///что будет принимать
     getTodolists: build.query<DomainTodolist[], void>({
       query: () => {
