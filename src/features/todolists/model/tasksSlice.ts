@@ -4,7 +4,7 @@ import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
 import { setAppStatus } from "../../../app/appSlice"
 import { RootState } from "../../../app/store"
-import { tasksApi } from "../api/tasksApi"
+import { _tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
 import { addTodolist, removeTodolist } from "./todolistsSlice"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
@@ -65,7 +65,7 @@ export const tasksSlice = createSlice({
 // Thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .getTasks(todolistId)
     .then((res) => {
       dispatch(setAppStatus({ status: "succeeded" }))
@@ -78,7 +78,7 @@ export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
 
 export const removeTaskTC = (arg: { taskId: string; todolistId: string }) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .deleteTask(arg)
     .then((res) => {
       if (res.data.resultCode === ResultCode.Success) {
@@ -95,7 +95,7 @@ export const removeTaskTC = (arg: { taskId: string; todolistId: string }) => (di
 
 export const addTaskTC = (arg: { title: string; todolistId: string }) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .createTask(arg)
     .then((res) => {
       if (res.data.resultCode === ResultCode.Success) {
@@ -131,7 +131,7 @@ export const updateTaskTC =
       }
 
       dispatch(setAppStatus({ status: "loading" }))
-      tasksApi
+      _tasksApi
         .updateTask({ taskId, todolistId, model })
         .then((res) => {
           if (res.data.resultCode === ResultCode.Success) {
