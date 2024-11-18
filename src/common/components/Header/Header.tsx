@@ -4,10 +4,20 @@ import IconButton from "@mui/material/IconButton"
 import LinearProgress from "@mui/material/LinearProgress"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
-import { changeTheme, logoutTC, selectAppStatus, selectIsLoggedIn, selectThemeMode } from "../../../app/appSlice"
+import {
+  changeTheme,
+  logoutTC,
+  selectAppStatus,
+  selectIsLoggedIn,
+  selectThemeMode,
+  setAppStatus, setIsLoggedIn
+} from "../../../app/appSlice"
 import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
 import { MenuButton } from "common/components"
+import { useLogoutMutation } from "../../../features/auth/api/authAPI"
+import { ResultCode } from "common/enums"
+import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 
 export const Header = () => {
@@ -17,6 +27,9 @@ export const Header = () => {
   const status = useAppSelector(selectAppStatus)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
+
+  const [logout] = useLogoutMutation()
+
   const theme = getTheme(themeMode)
 
   const changeModeHandler = () => {
@@ -24,7 +37,17 @@ export const Header = () => {
   }
 
   const logoutHandler = () => {
-    dispatch(logoutTC())
+
+    // dispatch(logoutTC())
+    //замеили на вызов функции trigger:
+    logout().then((res) => {
+      if (res.data?.resultCode === ResultCode.Success) {
+        dispatch(setAppStatus({ status: "succeeded" }))
+        dispatch(setIsLoggedIn({ isLoggedIn: false }))
+        dispatch(clearTasksAndTodolists({tasks:{},todolists:[]}))
+        localStorage.removeItem("sn-token")
+      }
+    })
   }
 
   return (

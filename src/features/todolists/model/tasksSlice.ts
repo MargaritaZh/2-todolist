@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
@@ -7,6 +7,7 @@ import { RootState } from "../../../app/store"
 import { tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
 import { addTodolist, removeTodolist } from "./todolistsSlice"
+import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 export type TasksStateType = {
   [key: string]: DomainTask[]
@@ -39,9 +40,10 @@ export const tasksSlice = createSlice({
         }
       },
     ),
-    clearTasks: create.reducer(() => {
-      return {}
-    }),
+    //заменили на общий
+    // clearTasks: create.reducer(() => {
+    //   return {}
+    // }),
   }),
   extraReducers: (builder) => {
     builder
@@ -50,6 +52,9 @@ export const tasksSlice = createSlice({
       })
       .addCase(removeTodolist, (state, action) => {
         delete state[action.payload.id]
+      })
+      .addCase(clearTasksAndTodolists,()=>{
+        return {}
       })
   },
   selectors: {
@@ -142,6 +147,6 @@ export const updateTaskTC =
     }
   }
 
-export const { setTasks, removeTask, addTask, clearTasks, updateTask } = tasksSlice.actions
+export const { setTasks, removeTask, addTask, updateTask } = tasksSlice.actions
 export const { selectTasks } = tasksSlice.selectors
 export const tasksReducer = tasksSlice.reducer

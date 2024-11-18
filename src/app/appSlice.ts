@@ -5,8 +5,8 @@ import { Dispatch } from "redux"
 import { _authApi } from "../features/auth/api/authAPI"
 import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
-import { clearTasks } from "../features/todolists/model/tasksSlice"
-import { clearTodolists } from "../features/todolists/model/todolistsSlice"
+
+import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 export type ThemeMode = "dark" | "light"
 export type RequestStatus = "idle" | "loading" | "succeeded" | "failed"
@@ -73,8 +73,7 @@ export const logoutTC = () => (dispatch: Dispatch) => {
       if (res.data.resultCode === ResultCode.Success) {
         dispatch(setAppStatus({ status: "succeeded" }))
         dispatch(setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasks())
-        dispatch(clearTodolists())
+        dispatch(clearTasksAndTodolists({tasks:{},todolists:[]}))
         localStorage.removeItem("sn-token")
       } else {
         handleServerAppError(res.data, dispatch)

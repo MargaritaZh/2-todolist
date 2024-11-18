@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit"
 import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
 import { RequestStatus, setAppStatus } from "../../../app/appSlice"
 import { _todolistsApi } from "../api/todolistsApi"
 import { Todolist } from "../api/todolistsApi.types"
+import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 export type FilterValuesType = "all" | "active" | "completed"
 
@@ -46,14 +47,22 @@ export const todolistsSlice = createSlice({
     }),
     setTodolists: create.reducer<{ todolists: Todolist[] }>((state, action) => {
       return action.payload.todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
-    }),
-    clearTodolists: create.reducer(() => {
-      return []
-    }),
+    })
+    //заменили на общий
+    // clearTodolists: create.reducer(() => {
+    //   return []
+    // })
   }),
-  selectors: {
-    selectTodolists: (state) => state,
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(clearTasksAndTodolists, () => {
+        return []
+      })
   },
+  selectors: {
+    selectTodolists: (state) => state
+  }
 })
 
 // Thunks
@@ -129,8 +138,7 @@ export const {
   changeTodolistEntityStatus,
   changeTodolistFilter,
   changeTodolistTitle,
-  clearTodolists,
-  setTodolists,
+  setTodolists
 } = todolistsSlice.actions
 export const { selectTodolists } = todolistsSlice.selectors
 export const todolistsReducer = todolistsSlice.reducer

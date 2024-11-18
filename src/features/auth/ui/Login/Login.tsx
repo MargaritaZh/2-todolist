@@ -51,12 +51,15 @@ export const Login = () => {
         if (res.data?.resultCode === ResultCode.Success) {
           dispatch(setIsLoggedIn({ isLoggedIn: true }))
           localStorage.setItem("sn-token", res.data.data.token)
+          reset()
         }
-        reset()
+
       })
 
 
   }
+
+
 
   if (isLoggedIn) {
     return <Navigate to={"/"} />

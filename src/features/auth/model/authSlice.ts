@@ -3,8 +3,7 @@ import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
 import { setAppStatus } from "../../../app/appSlice"
-import { clearTasks } from "../../todolists/model/tasksSlice"
-import { clearTodolists } from "../../todolists/model/todolistsSlice"
+
 import { _authApi } from "../api/authAPI"
 import { LoginArgs } from "../api/authAPI.types"
 
