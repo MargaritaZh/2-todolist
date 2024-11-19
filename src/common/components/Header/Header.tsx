@@ -44,7 +44,7 @@ export const Header = () => {
       if (res.data?.resultCode === ResultCode.Success) {
         dispatch(setAppStatus({ status: "succeeded" }))
         dispatch(setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasksAndTodolists({tasks:{},todolists:[]}))
+        dispatch(clearTasksAndTodolists())
         localStorage.removeItem("sn-token")
       }
     })

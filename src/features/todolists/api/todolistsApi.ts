@@ -35,7 +35,7 @@ export const todolistsApi = baseApi.injectEndpoints({
         return todolists.map(tl => ({ ...tl, filter: "all", entityStatus: "idle" }))
       },
       //прикрепляем тэг на get запрос
-      providesTags:["Todolist"],
+      providesTags:["Todolist"]
 
     }),
     // типизация query: то что возвращает///что будет принимать
