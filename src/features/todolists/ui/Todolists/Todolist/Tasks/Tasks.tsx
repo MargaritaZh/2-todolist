@@ -3,6 +3,7 @@ import { TaskStatus } from "common/enums"
 import { DomainTodolist } from "../../../../model/todolistsSlice"
 import { Task } from "./Task/Task"
 import { useGetTasksQuery } from "../../../../api/tasksApi"
+import { TasksSkeleton } from "../../../skeletons/TasksSkeleton/TasksSkeleton"
 
 type Props = {
   todolist: DomainTodolist
@@ -19,9 +20,9 @@ export const Tasks = ({ todolist }: Props) => {
   // }, [])
 
 
-  const { data } = useGetTasksQuery(todolist.id)
+  const { data:tasks, isLoading } = useGetTasksQuery(todolist.id)
 
-  let tasksForTodolist = data?.items
+  let tasksForTodolist = tasks?.items
 
 
   if (todolist.filter === "active") {
@@ -30,6 +31,10 @@ export const Tasks = ({ todolist }: Props) => {
 
   if (todolist.filter === "completed") {
     tasksForTodolist = tasksForTodolist?.filter((task) => task.status === TaskStatus.Completed)
+  }
+
+  if (isLoading) {
+    return <TasksSkeleton />
   }
 
   return (
