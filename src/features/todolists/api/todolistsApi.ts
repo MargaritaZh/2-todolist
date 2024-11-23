@@ -31,6 +31,7 @@ export const todolistsApi = baseApi.injectEndpoints({
         }
       },
       //редактируем ответ,добавляем то что не приходит с сервера
+      //свойство filter НЕ хранится на сервере
       transformResponse(todolists: Todolist[]): DomainTodolist[] {
         return todolists.map(tl => ({ ...tl, filter: "all", entityStatus: "idle" }))
       },
