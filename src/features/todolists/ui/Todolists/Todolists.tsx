@@ -12,7 +12,7 @@ export const Todolists = () => {
   // }, [])
 /////////////////////////////
 
-  const { data: todolists } = useGetTodolistsQuery()
+  const { data: todolists,isLoading } = useGetTodolistsQuery()
 
   ///////////////////////////////
 

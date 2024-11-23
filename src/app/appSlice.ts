@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
 import { RootState } from "./store"
 import { LoginArgs } from "../features/auth/api/authAPI.types"
 import { Dispatch } from "redux"
@@ -17,7 +17,7 @@ export const appSlice = createSlice({
     themeMode: "light" as ThemeMode,
     status: "idle" as RequestStatus,
     error: null as string | null,
-    isLoggedIn: false,
+    isLoggedIn: false
   },
   reducers: (create) => ({
     changeTheme: create.reducer<{ themeMode: ThemeMode }>((state, action) => {
@@ -31,19 +31,61 @@ export const appSlice = createSlice({
     }),
     setIsLoggedIn: create.reducer<{ isLoggedIn: boolean }>((state, action) => {
       state.isLoggedIn = action.payload.isLoggedIn
-    }),
+    })
 
   }),
+//ПИШЕМ В ЭТОМ Slice? т.к. у этого есть status в initialState,который мы меняем
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(isPending, (state) => {
+          state.status = 'loading'
+        })
+      .addMatcher(isFulfilled, (state) => {
+          state.status = 'succeeded'
+        })
+      .addMatcher(isRejected, (state) => {
+          state.status = 'failed'
+        })
+
+      //addMatcher будет работать одинаково в абсолютно любом slice, так как в него приходят все action при их dispatch
+      // .addMatcher(
+      // (action) => {
+        //code
+        // return action.type.endsWith('/pending')
+        // Эта функция возвращает bolean -значение, если  return true,
+        // то попадем дальше во вторую функцию и изменим ГЛОБАЛЬНЫЙ Sate Redux
+      // }, (state, action) => {
+      //change redux state
+      //   state.status = 'loading'
+      // })
+      // .addMatcher(
+      //   action => {
+      //     return action.type.endsWith('/fulfilled')
+      //   },
+      //   state => {
+      //     state.status = 'succeeded'
+      //   }
+      // )
+      // .addMatcher(
+      //   action => {
+      //     return action.type.endsWith('/rejected')
+      //   },
+      //   state => {
+      //     state.status = 'failed'
+      //   }
+      // )
+  },
   selectors: {
     selectThemeMode: (state) => state.themeMode,
     selectAppStatus: (state) => state.status,
     selectAppError: (state) => state.error,
-    selectIsLoggedIn: (state) => state.isLoggedIn,
-  },
+    selectIsLoggedIn: (state) => state.isLoggedIn
+  }
+
 })
 
-export const { changeTheme, setAppError, setAppStatus,setIsLoggedIn } = appSlice.actions
-export const { selectAppStatus, selectAppError, selectThemeMode,selectIsLoggedIn } = appSlice.selectors
+export const { changeTheme, setAppError, setAppStatus, setIsLoggedIn } = appSlice.actions
+export const { selectAppStatus, selectAppError, selectThemeMode, selectIsLoggedIn } = appSlice.selectors
 export const appReducer = appSlice.reducer
 
 
