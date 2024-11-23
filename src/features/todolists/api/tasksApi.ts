@@ -15,7 +15,7 @@ export const tasksApi = baseApi.injectEndpoints({
         }
       },
       //прикрепляем тэг на get запрос
-      providesTags: ["Tasks","Todolist","Task"]
+      providesTags: ["Task"]
     }),
 // типизация query: то что возвращает///что будет принимать
     createTask: build.mutation<BaseResponse<{ item: DomainTask }>, { title: string; todolistId: string }>({
@@ -30,17 +30,13 @@ export const tasksApi = baseApi.injectEndpoints({
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически
-      invalidatesTags: ["Todolist"]
+      invalidatesTags: ["Task"]
     }),
     deleteTask: build.mutation<BaseResponse, { todolistId: string; taskId: string }>({
       query: ({ todolistId, taskId }) => {
         return {
           url: `todo-lists/${todolistId}/tasks/${taskId}`,
           method: "DELETE",
-          body: {
-            todolistId,
-            taskId
-          }
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически
@@ -56,14 +52,9 @@ export const tasksApi = baseApi.injectEndpoints({
 
       query: ({ todolistId, taskId, model }) => {
         return {
-
           url: `todo-lists/${todolistId}/tasks/${taskId}`,
           method: "PUT",
-          body: {
-            todolistId,
-            taskId,
-            model
-          }
+          body: model,
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически

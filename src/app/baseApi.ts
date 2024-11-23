@@ -13,5 +13,5 @@ export const baseApi = createApi({
   //без этого не будет работать,такой синтаксис
   endpoints: () => ({}),
   //регистрируем тэги все наши
-  tagTypes: ["Todolist", "Tasks","Task"]
+  tagTypes: ["Todolist", "Task"]
 })
