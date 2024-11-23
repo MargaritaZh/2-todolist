@@ -18,6 +18,7 @@ import { MenuButton } from "common/components"
 import { useLogoutMutation } from "../../../features/auth/api/authAPI"
 import { ResultCode } from "common/enums"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
+import { baseApi } from "../../../app/baseApi"
 
 
 export const Header = () => {
@@ -44,8 +45,11 @@ export const Header = () => {
       if (res.data?.resultCode === ResultCode.Success) {
         dispatch(setAppStatus({ status: "succeeded" }))
         dispatch(setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasksAndTodolists())
         localStorage.removeItem("sn-token")
+
+        // dispatch(clearTasksAndTodolists())
+        //заменим на др метод,так как сейчас мы очищаем КЭШ после вылогинивания
+        dispatch(baseApi.util.resetApiState())
       }
     })
   }
