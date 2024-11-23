@@ -40,18 +40,23 @@ export const Header = () => {
   const logoutHandler = () => {
 
     // dispatch(logoutTC())
-    //замеили на вызов функции trigger:
-    logout().then((res) => {
-      if (res.data?.resultCode === ResultCode.Success) {
-        dispatch(setAppStatus({ status: "succeeded" }))
-        dispatch(setIsLoggedIn({ isLoggedIn: false }))
-        localStorage.removeItem("sn-token")
-
-        // dispatch(clearTasksAndTodolists())
-        //заменим на др метод,так как сейчас мы очищаем КЭШ после вылогинивания
-        dispatch(baseApi.util.resetApiState())
-      }
-    })
+    //замеили на вызов функции trigger----logout:
+    logout()
+      .then((res) => {
+        if (res.data?.resultCode === ResultCode.Success) {
+          dispatch(setAppStatus({ status: "succeeded" }))
+          dispatch(setIsLoggedIn({ isLoggedIn: false }))
+          localStorage.removeItem("sn-token")
+          // dispatch(clearTasksAndTodolists())
+          //заменим на др метод,так как сейчас мы очищаем КЭШ после вылогинивания
+          dispatch(baseApi.util.resetApiState())
+        }
+      })
+      .then(() => {
+        //ПРОписываем логику в then,т.к. этот асинхр. код сработывал быстрее чем придет ответ с сервера
+        // Очищаем кеш только для тегов ["Todolist", "Task"]
+        // dispatch(baseApi.util.invalidateTags(["Todolist", "Task"]))
+      })
   }
 
   return (

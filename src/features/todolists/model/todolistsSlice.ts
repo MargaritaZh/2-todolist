@@ -140,5 +140,6 @@ export const {
   changeTodolistTitle,
   setTodolists
 } = todolistsSlice.actions
+
 export const { selectTodolists } = todolistsSlice.selectors
 export const todolistsReducer = todolistsSlice.reducer
