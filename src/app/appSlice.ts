@@ -7,6 +7,8 @@ import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
 
 import { clearTasksAndTodolists } from "common/actions/common.actions"
+import { todolistsApi } from "../features/todolists/api/todolistsApi"
+import { tasksApi } from "../features/todolists/api/tasksApi"
 
 export type ThemeMode = "dark" | "light"
 export type RequestStatus = "idle" | "loading" | "succeeded" | "failed"
@@ -37,8 +39,15 @@ export const appSlice = createSlice({
 //ПИШЕМ В ЭТОМ Slice? т.к. у этого есть status в initialState,который мы меняем
   extraReducers: (builder) => {
     builder
-      .addMatcher(isPending, (state) => {
-          state.status = 'loading'
+      .addMatcher(isPending, (state,action) => {
+        if (
+          todolistsApi.endpoints.getTodolists.matchPending(action) ||
+          tasksApi.endpoints.getTasks.matchPending(action)
+          //исключить эти endpoints, чтобы не работала полоса вверху сайта т.к. мы сделали Skeletons для них
+        ) {
+          return
+        }
+        state.status = 'loading'
         })
       .addMatcher(isFulfilled, (state) => {
           state.status = 'succeeded'
