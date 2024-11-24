@@ -23,32 +23,17 @@ export const Tasks = ({ todolist }: Props) => {
 
   // const tasks = useAppSelector(selectTasks)
 
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   //
   // useEffect(() => {
   //   dispatch(fetchTasksTC(todolist.id))
   // }, [])
 
 
-  const { data:tasks, isLoading,isError,error } = useGetTasksQuery(todolist.id)
-
-  useEffect(() => {
-    if (error) {
-      let errMsg = 'Some error occurred'
-      //оператор in? пробегается по объекту и возвращает true-если такое свойство есть в объекте
-      if ('data' in error) {
-        const errData = error.data as ErrorData
-        if ('message' in errData) {
-          errMsg = errData.message as string
-        }
-      }
-      dispatch(setAppError({ error: errMsg }))
-    }
-  }, [error])
+  const { data:tasks, isLoading } = useGetTasksQuery(todolist.id)
 
 
   let tasksForTodolist = tasks?.items
-
 
   if (todolist.filter === "active") {
     tasksForTodolist = tasksForTodolist?.filter((task) => task.status === TaskStatus.New)
