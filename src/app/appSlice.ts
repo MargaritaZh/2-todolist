@@ -1,15 +1,12 @@
 import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
-import { RootState } from "./store"
 import { LoginArgs } from "../features/auth/api/authAPI.types"
 import { Dispatch } from "redux"
 import { _authApi } from "../features/auth/api/authAPI"
 import { ResultCode } from "common/enums"
 import { handleServerAppError, handleServerNetworkError } from "common/utils"
-
 import { clearTasksAndTodolists } from "common/actions/common.actions"
 import { todolistsApi } from "../features/todolists/api/todolistsApi"
 import { tasksApi } from "../features/todolists/api/tasksApi"
-
 export type ThemeMode = "dark" | "light"
 export type RequestStatus = "idle" | "loading" | "succeeded" | "failed"
 
