@@ -6,7 +6,8 @@ import { useGetTasksQuery } from "../../../../api/tasksApi"
 import { TasksSkeleton } from "../../../skeletons/TasksSkeleton/TasksSkeleton"
 import { useAppDispatch } from "common/hooks"
 import { setAppError } from "../../../../../../app/appSlice"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { TasksPagination } from "../TasksPagination/TasksPagination"
 
 type Props = {
   todolist: DomainTodolist
@@ -19,6 +20,7 @@ type ErrorData = {
   }
 }
 
+
 export const Tasks = ({ todolist }: Props) => {
 
   // const tasks = useAppSelector(selectTasks)
@@ -30,8 +32,9 @@ export const Tasks = ({ todolist }: Props) => {
   // }, [])
 
 
-  const { data:tasks, isLoading } = useGetTasksQuery(todolist.id)
+  const [page, setPage] = useState(1)
 
+  const { data: tasks, isLoading } = useGetTasksQuery({ todolistId: todolist.id, args: { page } })
 
   let tasksForTodolist = tasks?.items
 
@@ -52,11 +55,13 @@ export const Tasks = ({ todolist }: Props) => {
       {tasksForTodolist?.length === 0 ? (
         <p>Тасок нет</p>
       ) : (
-        <List>
-          {tasksForTodolist?.map((task) => {
-            return <Task key={task.id} task={task} todolist={todolist} />
-          })}
-        </List>
+        <>
+          <List>
+            {tasksForTodolist?.map((task) => {
+              return <Task key={task.id} task={task} todolist={todolist} />
+            })}
+          </List>
+          <TasksPagination totalCount={tasks?.totalCount || 0} page={page} setPage={setPage} /></>
       )}
     </>
   )

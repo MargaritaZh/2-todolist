@@ -3,14 +3,20 @@ import { BaseResponse } from "common/types"
 import { DomainTask, GetTasksResponse, UpdateTaskModel } from "./tasksApi.types"
 import { baseApi } from "../../../app/baseApi"
 
+export const PAGE_SIZE = 4
+
 
 export const tasksApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // типизация query: то что возвращает///что будет принимать
-    getTasks: build.query<GetTasksResponse, string>({
-      query: (todolistId) => {
+    getTasks: build.query<GetTasksResponse, { todolistId: string; args: { page: number } }>({
+      query: ({todolistId,args}) => {
+
+        const params = { ...args, count: PAGE_SIZE }
+
         return {
           url: `todo-lists/${todolistId}/tasks`,
+          params,
           method: "GET"
         }
       },
@@ -21,7 +27,7 @@ export const tasksApi = baseApi.injectEndpoints({
       // providesTags: res => (res ? res.items.map(({ id }) => ({ type: "Task", id })) : ["Task"])
 
       //теперь завязываемся на todolistId т.к. он есть в аргументах для всех query запросов для тасок
-      providesTags: (res, err, todolistId) =>
+      providesTags: (res, err,{todolistId} ) =>
 
         //если результат query запроса есть, то пробегаемся по массиву тасок
         //map проходит по каждой задаче и создает объект вида { type: "Task", id },где id — это уникальный идентификатор задачи.
