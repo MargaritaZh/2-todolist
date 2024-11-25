@@ -15,7 +15,29 @@ export const tasksApi = baseApi.injectEndpoints({
         }
       },
       //прикрепляем тэг на get запрос
-      providesTags: ["Task"]
+      // providesTags: ["Task"]
+
+      //делат наш тег более индивид-ным, он привязывает каждой таске свой id---> { type: "Task", id }
+      // providesTags: res => (res ? res.items.map(({ id }) => ({ type: "Task", id })) : ["Task"])
+
+      //теперь завязываемся на todolistId т.к. он есть в аргументах для всех query запросов для тасок
+      providesTags: (res, err, todolistId) =>
+
+        //если результат query запроса есть, то пробегаемся по массиву тасок
+        //map проходит по каждой задаче и создает объект вида { type: "Task", id },где id — это уникальный идентификатор задачи.
+        //as const используется для того, чтобы TypeScript рассматривал этот объект как константу.
+        //{ type: "Task", id: todolistId } --->Этот объект добавляется в конец массива. Он представляет собой тег для всего списка задач (todolist), а не для отдельной задачи.
+        //id: todolistId указывает на то, что этот тег относится к конкретному списку задач.
+
+        //динамически генерировать теги для управления кэшем в RTK Query,
+
+//каждой таске присвоется объект {type и id} и в конец массива добавит объект {type и id:todolistId}
+        //получили по сути  массив тэгов , последний отвечает за весь список задач для конкр тодолиста
+        // [{type:"Task",id:1},{type:"Task",id:2},{type:"Task",id:todolistId}]
+        res ? [...res.items.map((TASK) => ({ type: "Task", id: TASK.id }) as const)
+            , { type: "Task", id: todolistId }]
+          : ["Task"]
+
     }),
 // типизация query: то что возвращает///что будет принимать
     createTask: build.mutation<BaseResponse<{ item: DomainTask }>, { title: string; todolistId: string }>({
@@ -30,17 +52,27 @@ export const tasksApi = baseApi.injectEndpoints({
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически
-      invalidatesTags: ["Task"]
+      // invalidatesTags: ["Task"]
+
+      //переписали и привязались к  todolistId, так как не вытащить taskId из аргументов нашего query запроса
+      //и теперь это будет соответствовать типу и id в providesTags --->{ type: "Task", id: todolistId }
+      invalidatesTags: (res, err, { todolistId }) => [{ type: "Task", id: todolistId }]
+
     }),
     deleteTask: build.mutation<BaseResponse, { todolistId: string; taskId: string }>({
       query: ({ todolistId, taskId }) => {
         return {
           url: `todo-lists/${todolistId}/tasks/${taskId}`,
-          method: "DELETE",
+          method: "DELETE"
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически
-      invalidatesTags: ["Task"]
+      // invalidatesTags: ["Task"]
+
+      //принимает любые аргументы приходящие в наш query запрос выше
+      //и теперь это будет соответствовать типу и id в providesTags --->{ type: "Task", id }
+      invalidatesTags: (result, error, { taskId }) => [{ type: "Task", id: taskId }]
+
     }),
 
 // типизация query: то что возвращает///что будет принимать
@@ -54,11 +86,16 @@ export const tasksApi = baseApi.injectEndpoints({
         return {
           url: `todo-lists/${todolistId}/tasks/${taskId}`,
           method: "PUT",
-          body: model,
+          body: model
         }
       },
       //инвалидируем тэг, при его изменении отработает get запрос автоматически
-      invalidatesTags: ["Task"]
+      // invalidatesTags: ["Task"]
+
+//принимает любые аргументы приходящие в наш query запрос выше
+      //и теперь это будет соответствовать типу и id в providesTags --->{ type: "Task", id }
+      invalidatesTags: (result, error, { taskId }) => [{ type: "Task", id: taskId }]
+
     })
   })
 
