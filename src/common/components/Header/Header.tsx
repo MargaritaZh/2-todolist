@@ -6,8 +6,7 @@ import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import {
   changeTheme,
-  logoutTC,
-  selectAppStatus,
+   selectAppStatus,
   selectIsLoggedIn,
   selectThemeMode,
   setAppStatus, setIsLoggedIn

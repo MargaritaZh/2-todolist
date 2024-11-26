@@ -1,6 +1,5 @@
 import { createAction, nanoid } from "@reduxjs/toolkit"
-import { TasksStateType } from "../../features/todolists/model/tasksSlice"
-import { DomainTodolist } from "../../features/todolists/model/todolistsSlice"
+
 
 // export type ClearTasksAndTodolistsType = {
 //   tasks: TasksStateType

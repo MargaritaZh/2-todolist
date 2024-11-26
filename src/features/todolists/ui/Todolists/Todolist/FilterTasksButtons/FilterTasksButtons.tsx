@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import { useAppDispatch } from "common/hooks"
-import { changeTodolistFilter, FilterValuesType, DomainTodolist } from "../../../../model/todolistsSlice"
+
 import { filterButtonsContainerSx } from "./FilterTasksButtons.styles"
 import { todolistsApi } from "../../../../api/todolistsApi"
+import { DomainTodolist, FilterValues } from "../../../../lib/types/types"
 
 type Props = {
   todolist: DomainTodolist
@@ -21,7 +22,7 @@ export const FilterTasksButtons = ({ todolist }: Props) => {
   // }
 
   //Теперь у нас данные в КЕШЕ И НАМ НУЖНО ЧАСТИЧНО ИЗМЕНИТЬ КЕШ
-  const changeFilterTasksHandler = (filter: FilterValuesType) => {
+  const changeFilterTasksHandler = (filter: FilterValues) => {
     dispatch(
       todolistsApi.util.updateQueryData(
         // 1, endpoint?который мы хотим обновить

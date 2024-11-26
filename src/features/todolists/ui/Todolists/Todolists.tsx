@@ -13,7 +13,12 @@ export const Todolists = () => {
   // }, [])
 /////////////////////////////
 
-  const { data: todolists,isLoading,isFetching } = useGetTodolistsQuery()
+  const { data: todolists,isLoading,isFetching } = useGetTodolistsQuery(undefined, {
+    //автом-ки делай запрос за тодолистами каждые 3сек, для обновления
+    pollingInterval: 3000,
+    //не делай пулинг если я ушел со страницы
+    skipPollingIfUnfocused: true,
+  })
 
 
   if (isLoading) {

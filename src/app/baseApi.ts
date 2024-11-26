@@ -38,7 +38,14 @@ export const baseApi = createApi({
   //без этого не будет работать,такой синтаксис
   endpoints: () => ({}),
   //регистрируем тэги все наши
-  tagTypes: ["Todolist", "Task"]
+  tagTypes: ["Todolist", "Task"],
+  //управлением времени кэширования
+  keepUnusedDataFor: 5,
+  refetchOnFocus: true,
+  //возобновить автоматически запросы когда появится отвалившийся интернет:
+  refetchOnReconnect: true,
+
+
 })
 
 

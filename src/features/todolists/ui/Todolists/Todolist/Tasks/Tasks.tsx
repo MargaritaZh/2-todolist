@@ -1,13 +1,11 @@
 import List from "@mui/material/List"
 import { TaskStatus } from "common/enums"
-import { DomainTodolist } from "../../../../model/todolistsSlice"
 import { Task } from "./Task/Task"
 import { useGetTasksQuery } from "../../../../api/tasksApi"
 import { TasksSkeleton } from "../../../skeletons/TasksSkeleton/TasksSkeleton"
-import { useAppDispatch } from "common/hooks"
-import { setAppError } from "../../../../../../app/appSlice"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { TasksPagination } from "../TasksPagination/TasksPagination"
+import { DomainTodolist } from "../../../../lib/types/types"
 
 type Props = {
   todolist: DomainTodolist

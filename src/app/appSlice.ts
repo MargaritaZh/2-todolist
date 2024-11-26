@@ -1,10 +1,4 @@
 import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
-import { LoginArgs } from "../features/auth/api/authAPI.types"
-import { Dispatch } from "redux"
-import { _authApi } from "../features/auth/api/authAPI"
-import { ResultCode } from "common/enums"
-import { handleServerAppError, handleServerNetworkError } from "common/utils"
-import { clearTasksAndTodolists } from "common/actions/common.actions"
 import { todolistsApi } from "../features/todolists/api/todolistsApi"
 import { tasksApi } from "../features/todolists/api/tasksApi"
 export type ThemeMode = "dark" | "light"
@@ -95,39 +89,39 @@ export const { selectAppStatus, selectAppError, selectThemeMode, selectIsLoggedI
 export const appReducer = appSlice.reducer
 
 
-export const loginTC = (data: LoginArgs) => (dispatch: Dispatch) => {
-  dispatch(setAppStatus({ status: "loading" }))
-  _authApi
-    .login(data)
-    .then((res) => {
-      if (res.data.resultCode === ResultCode.Success) {
-        dispatch(setAppStatus({ status: "succeeded" }))
-        dispatch(setIsLoggedIn({ isLoggedIn: true }))
-        localStorage.setItem("sn-token", res.data.data.token)
-      } else {
-        handleServerAppError(res.data, dispatch)
-      }
-    })
-    .catch((error) => {
-      handleServerNetworkError(error, dispatch)
-    })
-}
+// export const loginTC = (data: LoginArgs) => (dispatch: Dispatch) => {
+//   dispatch(setAppStatus({ status: "loading" }))
+//   _authApi
+//     .login(data)
+//     .then((res) => {
+//       if (res.data.resultCode === ResultCode.Success) {
+//         dispatch(setAppStatus({ status: "succeeded" }))
+//         dispatch(setIsLoggedIn({ isLoggedIn: true }))
+//         localStorage.setItem("sn-token", res.data.data.token)
+//       } else {
+//         handleServerAppError(res.data, dispatch)
+//       }
+//     })
+//     .catch((error) => {
+//       handleServerNetworkError(error, dispatch)
+//     })
+// }
 
-export const logoutTC = () => (dispatch: Dispatch) => {
-  dispatch(setAppStatus({ status: "loading" }))
-  _authApi
-    .logout()
-    .then((res) => {
-      if (res.data.resultCode === ResultCode.Success) {
-        dispatch(setAppStatus({ status: "succeeded" }))
-        dispatch(setIsLoggedIn({ isLoggedIn: false }))
-        dispatch(clearTasksAndTodolists())
-        localStorage.removeItem("sn-token")
-      } else {
-        handleServerAppError(res.data, dispatch)
-      }
-    })
-    .catch((error) => {
-      handleServerNetworkError(error, dispatch)
-    })
-}
+// export const logoutTC = () => (dispatch: Dispatch) => {
+//   dispatch(setAppStatus({ status: "loading" }))
+//   _authApi
+//     .logout()
+//     .then((res) => {
+//       if (res.data.resultCode === ResultCode.Success) {
+//         dispatch(setAppStatus({ status: "succeeded" }))
+//         dispatch(setIsLoggedIn({ isLoggedIn: false }))
+//         dispatch(clearTasksAndTodolists())
+//         localStorage.removeItem("sn-token")
+//       } else {
+//         handleServerAppError(res.data, dispatch)
+//       }
+//     })
+//     .catch((error) => {
+//       handleServerNetworkError(error, dispatch)
+//     })
+// }
